@@ -20,7 +20,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17' # Specify the Java version you need
+          java-version: '17'  # Specify the Java version you need
+          distribution: 'temurin'  # Specify the distribution (e.g., 'temurin' for Eclipse Adoptium)
 
       - name: Cache Maven packages
         uses: actions/cache@v2
@@ -35,3 +36,27 @@ jobs:
 
       - name: Run Tests
         run: mvn test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Deploy to Server
+        env:
+          DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
+        run: |
+          echo "Deploying the application..."
+          # Replace the following with actual deployment commands
+          # e.g., copying files to a remote server using SCP/SSH
+          # scp target/your-app.jar $DEPLOY_USER@$DEPLOY_SERVER:/path-to-deployment-folder/
